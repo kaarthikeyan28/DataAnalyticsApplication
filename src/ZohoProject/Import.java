@@ -2,8 +2,10 @@ package ZohoProject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,7 +29,20 @@ class Import implements Runnable{
     synchronized public void loadFiles(){
         try{
 
+            String dot=".";
+
+            if(!(filename.contains(dot))){
+                System.err.println("Extension Invalid !");
+                return;
+            }
             String tablename = filename.split("\\.")[0];
+            String extension = filename.split("\\.")[1];
+
+            //System.out.println(extension);
+            if(!(extension.equals("csv"))){
+                System.err.println("Only Csv files are accepted !");
+                return;
+            }
 
             String path = "C:\\Users\\hp\\Desktop\\ZohoProject" + "\\" + filename;
 
@@ -43,9 +58,12 @@ class Import implements Runnable{
             }
             createTable(tablename,lines);
         }
+
+        catch (FileNotFoundException exe){
+            System.err.println("Your file doesn't exist :(");
+        }
         catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
@@ -78,6 +96,11 @@ class Import implements Runnable{
 
             return;
         }
+        catch (SQLSyntaxErrorException sqlerr){
+            System.err.println("Your File already exist in Database !");
+            return;
+        }
+
         catch (Exception e) {
             e.printStackTrace();
         }

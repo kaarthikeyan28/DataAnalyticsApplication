@@ -12,44 +12,55 @@ public class ThreadQueue{
     }
 
     public void ThreadCall(){
-        Scanner sc = new Scanner(System.in);
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+            Scanner sc = new Scanner(System.in);
+            ExecutorService executor = Executors.newFixedThreadPool(10);
 
-        do{
-            System.out.println("Enter Option to choose ");
-            System.out.println(" 1 - Import Files ");
-            System.out.println(" 2 - View Files ");
-            System.out.println(" 3 - Exit ");
+            do {
+                System.out.println("Enter Option to choose ");
+                System.out.println(" 1 - Import Files ");
+                System.out.println(" 2 - View Files ");
+                System.out.println(" 3 - Exit ");
 
-            int ask = sc.nextInt();
+                int ask = sc.nextInt();
 
-            if(ask==3) break;
+                if (ask == 3) break;
 
-            switch (ask){
-                case 1:{
-                    System.out.println("Choose your file name:");
-                    String filelocation = sc.next();
+                switch (ask) {
+                    case 1: {
+                        System.out.println("Choose your file:");
+                        String filelocation = sc.next();
 
-                    File fileobj = new File(filelocation);
-                    viewobj.addFile(filelocation,fileobj);
-                    //System.out.println(viewobj.getFile(filelocation).isUploaded());
+                        File fileobj = new File(filelocation);
 
-                    Runnable threadref = new Import(filelocation,viewobj);
-                    executor.execute(threadref);
+                        viewobj.addFile(filelocation, fileobj);
+                        //System.out.println(viewobj.getFile(filelocation).isUploaded());
 
-                    break;
+                        Runnable threadref = new Import(filelocation, viewobj);
+                        executor.execute(threadref);
+
+                        break;
+                    }
+                    case 2: {
+                        viewobj.displayStatus();
+                        break;
+                    }
+                    default:
+                        System.err.println("Your option doesn't exist");
                 }
-                case 2:{
-                    viewobj.displayStatus();
-                    break;
-                }
-                default:
-                    System.err.println("Your option doesn't exist");
+
+            } while (true);
+
+            executor.shutdown();
+
+            System.out.println("Exiting ....\n");
+            try {
+                Thread.sleep(1000);
             }
-
-        }while(true);
-
-        executor.shutdown();
-
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            System.out.println("---------************--------");
+            System.out.println("           Thankyou !");
+            System.out.println("---------************--------");
+        }
     }
-}
